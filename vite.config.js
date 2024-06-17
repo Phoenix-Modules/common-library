@@ -6,25 +6,14 @@ export default defineConfig({
         sourcemap: true,
         rollupOptions: {
             input: {
-                module: "src/module.js",
+                module: "src/index.js",
             },
             output: {
-                entryFileNames: "scripts/[name].js",
+                entryFileNames: "[name].js",
                 format: "es",
                 dir: "dist",
             },
         },
-    },
-    plugins: [        
-        copy({
-            targets: [
-                { src: "src/module.json", dest: "dist" },
-                { src: "src/packs", dest: "dist" },
-                { src: "src/styles", dest: "dist" },
-                { src: "src/images", dest: "dist" },
-            ],
-            hook: "writeBundle",
-        })
-    ],
+    }
 });
 
