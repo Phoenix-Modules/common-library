@@ -1,19 +1,14 @@
-import {addEffectIfMissing, addEffectsIfMissing, deleteEffectIfExists, hasEffect} from "./services/effectService";
-import {
-    getActorFromChatMessage,
-    getCurrentSceneTokenFromChatMessage,
-    getItemFromChatMessage
-} from "./services/chatMessageService";
-import {scaleToken} from "./services/tokenService";
+import * as EffectService from "./services/effectService";
+import * as ChatService from "./services/chatMessageService";
+import * as TokenService from "./services/tokenService";
+import * as CompendiumService from "./services/compendiumService";
+import * as Constants from "./constants/constants";
 
 
 module.exports = {
-    addEffectIfMissing,
-    addEffectsIfMissing,
-    deleteEffectIfExists,
-    hasEffect,
-    getItemFromChatMessage,
-    getActorFromChatMessage,
-    getCurrentSceneTokenFromChatMessage,
-    scaleToken
+    EffectService,
+    ChatService,
+    TokenService,
+    CompendiumService,
+    Constants    
 }
