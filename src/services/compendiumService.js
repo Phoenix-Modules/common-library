@@ -1,5 +1,4 @@
 import {HANDLERS} from "../constants/constants";
-import {sys} from "yarn/lib/cli";
 
 
 export async function addToCompendium(moduleName, compendiumName, documentArray, compendiumType) {
