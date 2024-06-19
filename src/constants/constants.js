@@ -11,6 +11,10 @@ export const COMPENDIUM_TYPES = {
     Scene: "Scene"
 }
 
+export const GAME_SYSTEM = {
+    dnd5e: "dnd5e"
+}
+
 export const HANDLERS = [
     {
         key: 'Actor',
