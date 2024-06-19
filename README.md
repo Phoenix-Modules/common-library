@@ -47,6 +47,18 @@ const actors = [
 
 //Add actors to compendium
 await CompendiumService.addToCompendium("my-cool-module", "my-module-actors", actors, Constants.COMPENDIUM_TYPES.Actor);
+
+CompendiumService.findInCompendiums(documentName, compendiumType, compendiumName, system) //Search inside compendiums
+- documentName //The name of the document in the compendium
+- compendiumType //The type of document the compendium holds, see "Constants" section above
+- compendiumName //Optional - The name of the compendium with a dot notation, e.g.   my-module.my-compendium
+- system //Optional - The system of the compendium, e.g. dnd5e
+
+//returns the class document named "My New Class" from the my-cool-module.my-module-classes compendium
+await CompendiumService.findInCompendiums("My New Class", Constants.COMPENDIUM_TYPES.Item, "my-cool-module.my-module-classes");
+
+//returns the wizard class document from the dnd5e system compendiums
+await CompendiumService.findInCompendiums("Wizard", Constants.COMPENDIUM_TYPES.Item, undefined, Constants.GAME_SYSTEM.dnd5e);
 ```
 
 ### ChatService
