@@ -4,7 +4,11 @@
   "description": "A common library for building Foundry VTT modules",
   "main": "dist/module.js",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@phoenix-modules"
+    "registry": "https://registry.npmjs.org/@phoenix-modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Phoenix-Modules/common-library"
   },
   "license": "GPL-3.0-or-later",
   "private": false,
