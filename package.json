@@ -1,6 +1,6 @@
 {
   "name": "@phoenix-modules/common-library",
-  "version": "0.3.2",
+  "version": "0.3.23",
   "description": "A common library for building Foundry VTT modules",
   "main": "dist/module.js",
   "publishConfig": {
@@ -19,8 +19,5 @@
   "devDependencies": {
     "rollup-plugin-copy": "^3.5.0",
     "vite": "^5.2.13"
-  },
-  "dependencies": {
-    "yarn": "^1.22.22"
   }
 }
