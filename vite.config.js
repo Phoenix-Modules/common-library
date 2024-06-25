@@ -9,7 +9,7 @@ export default defineConfig({
                 module: "src/index.js",
             },
             output: {
-                entryFileNames: "[name].js",
+                entryFileNames: "index.js",
                 format: "es",
                 dir: "dist",
             },
