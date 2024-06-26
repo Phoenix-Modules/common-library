@@ -1,6 +1,6 @@
 {
   "name": "@phoenix-modules/common-library",
-  "version": "0.3.3.1",
+  "version": "0.3.31",
   "description": "A common library for building Foundry VTT modules",
   "exports": "./dist/index.js",
   "publishConfig": {
