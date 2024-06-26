@@ -20,7 +20,7 @@ async function addManyToCompendium(compendium, documentCollection, compendiumTyp
         if (!existingDocument) {
             let addedItem;
             addedItem = await handler(document, {pack: compendium.metadata.id});
-            console.log(`Macro '${addedItem.name}' added to compendium ${compendium.metadata.name}`);
+            console.log(`${compendiumType} '${addedItem.name}' added to compendium ${compendium.metadata.name}`);
         }
     }
 
