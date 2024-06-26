@@ -1,5 +1,6 @@
 ﻿/.git/
 /Reference/
+/dist/
 /.idea/
 /node_modules/
 yarn.lock
