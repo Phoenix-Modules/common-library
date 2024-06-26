@@ -1,10 +1,11 @@
-import copy from "rollup-plugin-copy";
-import { defineConfig, Plugin } from "vite";
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { defineConfig } from "vite";
 
 export default defineConfig({
     build: {
         minify: false,
         rollupOptions: {
+            plugins: [nodeResolve({ exportConditions: ['node'] })],
             input: {
                 module: "src/index.js",
             },
@@ -12,7 +13,8 @@ export default defineConfig({
                 entryFileNames: "index.js",
                 format: "es",
                 dir: "dist",
-            },
+                interop: "esModule"                
+            }
         },
     }
 });

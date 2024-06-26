@@ -1,4 +1,4 @@
-import {HANDLERS} from "../constants/constants";
+import {HANDLERS} from "../constants";
 
 
 export async function addToCompendium(moduleName, compendiumName, documentArray, compendiumType) {

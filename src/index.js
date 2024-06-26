@@ -1,14 +1,7 @@
-import * as EffectService from "./services/effectService";
-import * as ChatService from "./services/chatMessageService";
-import * as TokenService from "./services/tokenService";
-import * as CompendiumService from "./services/compendiumService";
-import * as Constants from "./constants/constants";
-
+import * as services from './services/index.js';
+import * as constants from './constants/index.js';
 
 module.exports = {
-    EffectService,
-    ChatService,
-    TokenService,
-    CompendiumService,
-    Constants    
+    services,
+    constants
 }

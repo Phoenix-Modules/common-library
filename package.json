@@ -2,7 +2,7 @@
   "name": "@phoenix-modules/common-library",
   "version": "0.3.3.1",
   "description": "A common library for building Foundry VTT modules",
-  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/@phoenix-modules"
   },
@@ -10,7 +10,10 @@
     "type": "git",
     "url": "https://github.com/Phoenix-Modules/common-library"
   },
-  "files": [ "/dist" ],
+  "files": [
+    "/dist"
+  ],
+  "type": "module",
   "license": "GPL-3.0-or-later",
   "private": false,
   "author": "Brandin Canterbury",
@@ -18,6 +21,7 @@
     "build": "vite build"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "rollup-plugin-copy": "^3.5.0",
     "vite": "^5.2.13"
   }
