@@ -1,4 +1,4 @@
-import {HANDLERS} from "../constants";
+import {COMPENDIUM_HANDLERS} from "../constants";
 
 
 export async function addToCompendium(moduleName, compendiumName, documentArray, compendiumType) {
@@ -13,7 +13,7 @@ export async function addToCompendium(moduleName, compendiumName, documentArray,
 
 async function addManyToCompendium(compendium, documentCollection, compendiumType) {
     compendium.configure({locked: false});
-    const handler = HANDLERS.find(x => x.key === compendiumType).value;
+    const handler = COMPENDIUM_HANDLERS.find(x => x.key === compendiumType).value;
 
     for (const document of documentCollection) {
         const existingDocument = compendium.index.find((i) => i.name === document.name);
