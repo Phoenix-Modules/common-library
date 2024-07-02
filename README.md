@@ -23,7 +23,7 @@ writing code within foundry. I try to follow best practices here, however, there
     Constants.SOCKET_METHOD_NAMES //Method names for socketLib.  See Socket Section.
 ```
 
-## Compendium Service
+## Compendium Service:
 
 ***NOTE: Potential SocketLib required***
 ```javascript
@@ -57,7 +57,7 @@ writing code within foundry. I try to follow best practices here, however, there
     await CompendiumService.FindInCompendiums("Wizard", Constants.COMPENDIUM_TYPES.Item, undefined, Constants.GAME_SYSTEM.dnd5e);
 ```
 
-## ChatService
+## ChatService:
 
 ```javascript
     await ChatService.GetItemFromChatMessage(chatMessage) //Gets a Item5e document from the chat message
@@ -65,7 +65,7 @@ writing code within foundry. I try to follow best practices here, however, there
     await ChatService.GetCurrentSceneTokenFromChatMessage(chatMessage) //Gets the token of the speaker of the chatMessage
 ```
 
-## EffectService
+## EffectService:
 
 ***NOTE: Potential SocketLib required***
 ```javascript
@@ -76,7 +76,7 @@ writing code within foundry. I try to follow best practices here, however, there
     EffectService.HasEffect(actor, effectName) //boolean response.
 ```
 
-## TokenService
+## TokenService:
 
 ***NOTE: Potential SocketLib required***
 ```javascript
@@ -86,14 +86,14 @@ writing code within foundry. I try to follow best practices here, however, there
     await TokenService.ResetTokenScale(token) //Resets token scale to 1
 ```
 
-## ActorService
+## ActorService:
 
 ```javascript
     ActorService.GetItemsFromActorByType(actor5e, itemType) //Gets an array of items from the actor by the item type
     ActorService.GetItemFromActorByName(actor5e, itemName) //Gets a single item from the actor by name
 ```
 
-## SocketService
+## SocketService:
 
 SocketService is a class that checks if socketlib is installed and creates a self-contained socketlib instance, injecting common library handlers
 for the module you pass in (See Constants.SOCKET_METHOD_NAMES).  It wraps all the socketlib methods available in the socketLib module EXCEPT the system methods.
@@ -112,7 +112,7 @@ For reference, see:https://github.com/manuelVo/foundryvtt-socketlib/tree/develop
     window.PhoenixSocketLib.myModuleName;
 ```
 
-### Public Variables
+### Public Variables:
 
 ```javascript
     window.PhoenixSocketLib.HasSocketLib //Returns a bool
@@ -142,7 +142,7 @@ For reference, see:https://github.com/manuelVo/foundryvtt-socketlib/tree/develop
 ### Call Common Socket Methods:
 >See socketLib readme for more info: https://github.com/manuelVo/foundryvtt-socketlib/tree/develop
 ```javascript
-    window.PhoenixSocketLib.myModuleName.executeAsGM(Constants.SOCKET_METHOD_NAMES.ADD_EFFECT, myEffectData);
+    await window.PhoenixSocketLib.myModuleName.executeAsGM(Constants.SOCKET_METHOD_NAMES.ADD_EFFECT, actor5e, myEffectData);
 ```
 
 ### Register a new method
