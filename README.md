@@ -9,6 +9,7 @@ This is a common set of tools I find myself using as I'm writing my foundry modu
 in addition, these may not be the best way to handle these within foundry as I am still learning the intricacies and caveats of
 writing code within foundry. I try to follow best practices here, however, there may be occasion where I have not. 
 
+>Current as of foundry V12 and tested with DND5e
 
 
 # Breakdown of Features:
