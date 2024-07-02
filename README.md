@@ -1,5 +1,4 @@
 # Phoenix-Modules common-library
-___
 
 >**About Me:** I've been a full-stack developer since 2012, working on various enterprise level applications for
 different companies. I've always been a nerd and loved DND, so writing modules for foundry has been my newfound passion.
@@ -13,10 +12,9 @@ writing code within foundry. I try to follow best practices here, however, there
 
 
 # Breakdown of Features:
-___
 
 ## Constants:
-___
+
 ```javascript
     Constants.COMP_TYPES //Compendium Types, This is for reference, you can also use CONST.COMPENDIUM_DOCUMENT_TYPES from foundry
     
@@ -26,7 +24,7 @@ ___
 ```
 
 ## Compendium Service
-___
+
 ***NOTE: Potential SocketLib required***
 ```javascript
     CompendiumService.AddToCompendium(moduleName, compendiumName, documentArray, compendiumType) //Add Items to a compendium pack
@@ -60,7 +58,7 @@ ___
 ```
 
 ## ChatService
-___
+
 ```javascript
     await ChatService.GetItemFromChatMessage(chatMessage) //Gets a Item5e document from the chat message
     await ChatService.GetActorFromChatMessage(chatMessage) //Gets an Actor5e document from the chat message, this will always return the speaker
@@ -68,7 +66,7 @@ ___
 ```
 
 ## EffectService
-___
+
 ***NOTE: Potential SocketLib required***
 ```javascript
     //Note: DAE has this as a checkbox as well in the UI.
@@ -79,7 +77,7 @@ ___
 ```
 
 ## TokenService
-___
+
 ***NOTE: Potential SocketLib required***
 ```javascript
     await TokenService.ScaleToken(token, scaleIncrement) //Scales the token texture (I use in flight module)
@@ -89,14 +87,14 @@ ___
 ```
 
 ## ActorService
-___
+
 ```javascript
     ActorService.GetItemsFromActorByType(actor5e, itemType) //Gets an array of items from the actor by the item type
     ActorService.GetItemFromActorByName(actor5e, itemName) //Gets a single item from the actor by name
 ```
 
 ## SocketService
-___
+
 SocketService is a class that checks if socketlib is installed and creates a self-contained socketlib instance, injecting common library handlers
 for the module you pass in (See Constants.SOCKET_METHOD_NAMES).  It wraps all the socketlib methods available in the socketLib module EXCEPT the system methods.
 It then registers itself with a global variable automatically. This is done to generate an easily accessible, unique singleton of your module's socketLib instance.
