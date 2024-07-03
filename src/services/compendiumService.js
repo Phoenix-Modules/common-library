@@ -48,20 +48,21 @@ const CompendiumService = {
             return typeMatch && compendiumNameMatch && systemMatch;
         });
 
-        const foundItems = [];
+        const foundIndexes = [];
 
         for (const pack of packs) {
             const index = await pack.getIndex();
             const entry = index.find(e => e.name.toLowerCase() === itemName.toLowerCase());
             if (entry) {
                 const item = await pack.getDocument(entry._id);
-                foundItems.push(item);
+                foundIndexes.push(item);
             }
         }
 
         // Return the found items
-        if (foundItems.length > 0) {
-            return foundItems;
+        if (foundIndexes.length > 0) {
+            
+            return foundIndexes;
         } else {
             console.log(`Item "${itemName}" not found in any DND5e compendium packs.`);
             return null;
@@ -78,15 +79,18 @@ const CompendiumService = {
     },
     
     CreateOrUpdateCompendiumDocument: async (document, compendium, compendiumType) => {
-        const existingDocument = compendium.index.find((i) => i.name === document.name);
-        if (!existingDocument) {
+        const existingCacheDocument = compendium.index.find(i => i.name === document.name);
+        if (!existingCacheDocument) {
             const handler = compendiumMapper[compendiumType];
             let addedItem;
             addedItem = await handler.create(document, {pack: compendium.metadata.id});
             console.log(`${compendiumType} '${addedItem.name}' added to compendium ${compendium.metadata.name}`);
             return;
         }
-        existingDocument.update(document);
+        
+        const compendiumDocument = await compendium.getDocument(existingCacheDocument._id);
+
+        compendiumDocument.update(document);
     }
 }
 

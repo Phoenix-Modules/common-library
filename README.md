@@ -5,7 +5,8 @@ different companies. I've always been a nerd and loved DND, so writing modules f
 
 >If you wish to support me or buy me a coffee, my patreon is: https://www.patreon.com/PhoenixModules
  
->Report issues here: https://github.com/Phoenix-Modules/common-library/issues
+>Report issues here: https://github.com/Phoenix-Modules/common-library/issues  
+> Discord: https://discord.gg/X3mRGgMdMn
 
 This is a common set of tools I find myself using as I'm writing my foundry modules, This list is by no means comprehensive,
 in addition, these may not be the best way to handle these within foundry as I am still learning the intricacies and caveats of

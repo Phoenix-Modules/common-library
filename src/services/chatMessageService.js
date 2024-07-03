@@ -34,15 +34,7 @@ const ChatMessageService = {
     },
 
     GetTargetsFromChatMessage: async (chatMessage) => {
-        const targets = chatMessage?.flags?.dnd5e?.targets;
-        const targetObjs = [];
-        if(Array.isArray(targets)) {
-            for (let i = 0; i < targets.length; i++) {
-                const target = await fromUuid(targets[i].uuid);
-                targetObjs.push(target);
-            }
-        }
-        return targetObjs;
+        return chatMessage?.user?.targets;
     }
 }
 
