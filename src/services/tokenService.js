@@ -1,11 +1,13 @@
 
+const SCALE_MULTIPLIER = 0.02;
 
 const TokenService = {
     ///Scale the token by the increment
     ///token:  token (accepts the document, or the wrapper with the document field)
     ///scaleIncrement: the amount to increment the scale by
-    ScaleToken: async (token, scaleIncrement = 0.02) => {
-        const hasDocument = token.texture === undefined;
+    ScaleToken: async (token, scaleValue = 0.02) => {
+        const scaleIncrement = scaleValue * SCALE_MULTIPLIER;
+        const hasDocument = token.document ?? false;
         if(hasDocument) {
             await token.document.update({ texture: { scaleX: 1 + scaleIncrement, scaleY: 1 + scaleIncrement}});
             return;
@@ -16,21 +18,19 @@ const TokenService = {
     ///Elevate the token by the increment
     ///token:  token (accepts the document, or the wrapper with the document field)
     ///elevation: new token elevation
-    ElevateToken: async (token, elevationIncrement) => {
-        const hasDocument = token.elevation === undefined;
+    ElevateToken: async (token, elevationValue) => {
+        const hasDocument = token.document ?? false;
         if(hasDocument) {
-            let docElevation = token.document.elevation + elevationIncrement;
-            await token.document.update({ elevation: docElevation });
+            await token.document.update({ elevation: elevationValue });
             return;
         }
-        let elevation = token.elevation + elevationIncrement;
-        await token.update({ elevation: elevation });
+        await token.update({ elevation: elevationValue });
     },
 
     ///Reset the token scale
     ///token:  token (accepts the document, or the wrapper with the document field)
     ResetTokenScale: async (token) => {
-        const hasDocument = token.texture === undefined;
+        const hasDocument = token.document ?? false;
         if(hasDocument) {
             await token.document.update({ texture: { scaleX: 1, scaleY: 1}});
             return;
@@ -41,7 +41,7 @@ const TokenService = {
     ///Reset the token elevation
     ///token:  token (accepts the document, or the wrapper with the document field)
     ResetTokenElevation: async (token) => {
-        const hasDocument = token.elevation === undefined;
+        const hasDocument = token.document ?? false;
         if(hasDocument) {
             await token.document.update({ elevation: 0 });
             return;

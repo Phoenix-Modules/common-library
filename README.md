@@ -1,9 +1,11 @@
-# Phoenix-Modules common-library
+# Phoenix-Modules: common-library
 
 >**About Me:** I've been a full-stack developer since 2012, working on various enterprise level applications for
 different companies. I've always been a nerd and loved DND, so writing modules for foundry has been my newfound passion.
 
-
+>If you wish to support me or buy me a coffee, my patreon is: https://www.patreon.com/PhoenixModules
+ 
+>Report issues here: https://github.com/Phoenix-Modules/common-library/issues
 
 This is a common set of tools I find myself using as I'm writing my foundry modules, This list is by no means comprehensive,
 in addition, these may not be the best way to handle these within foundry as I am still learning the intricacies and caveats of
@@ -12,21 +14,25 @@ writing code within foundry. I try to follow best practices here, however, there
 >Current as of foundry V12 and tested with DND5e
 
 
+![Module Background](https://github.com/Phoenix-Modules/flight/assets/7071396/b207910e-aff0-4bbc-8a61-e60ba7dae705)
+
+
 # Breakdown of Features:
 
 ## Constants:
 
 ```javascript
-    Constants.COMP_TYPES //Compendium Types, This is for reference, you can also use CONST.COMPENDIUM_DOCUMENT_TYPES from foundry
-    
-    Constants.ITEM_TYPE //Item Types, A list of DND5e Item Types
-    
-    Constants.SOCKET_METHOD_NAMES //Method names for socketLib.  See Socket Section.
+    PhxConst.COMP_TYPES //Compendium Types, This is for reference, you can also use CONST.COMPENDIUM_DOCUMENT_TYPES from foundry
+
+    PhxConst.ITEM_TYPE //Item Types, A list of DND5e Item Types
+
+    PhxConst.SOCKET_METHOD_NAMES //Method names for socketLib.  See Socket Section.
 ```
 
 ## Compendium Service:
 
-***NOTE: Potential SocketLib required***
+>The add methods will update the item if it exists in the compendium already 
+
 ```javascript
     CompendiumService.AddToCompendium(moduleName, compendiumName, documentArray, compendiumType) //Add Items to a compendium pack
     - moduleName //Name of your module, must match module.json's ID
@@ -42,8 +48,12 @@ writing code within foundry. I try to follow best practices here, however, there
         { name: "Bob the builder", type: "character" }
     ];
 
-    //Add actors to compendium
-    await CompendiumService.AddToCompendium("my-cool-module", "my-module-actors", actors, Constants.COMPENDIUM_TYPES.Actor);
+    //Add single document to compendium
+    await CompendiumService.AddToCompendium("my-cool-module", "my-module-actors", actor5e, PhxConst.COMP_TYPES.Actor);
+    
+    //Add multiple documents to Compendium
+    await CompendiumService.AddManyToCompendium("my-extra-cool-module", "my-items", [item5e1, item5e2], PhxConst.COMP_TYPES.Item)
+
     
     CompendiumService.FindInCompendiums(documentName, compendiumType, compendiumName, system) //Search inside compendiums
     - documentName //The name of the document in the compendium
@@ -61,9 +71,16 @@ writing code within foundry. I try to follow best practices here, however, there
 ## ChatService:
 
 ```javascript
-    await ChatService.GetItemFromChatMessage(chatMessage) //Gets a Item5e document from the chat message
-    await ChatService.GetActorFromChatMessage(chatMessage) //Gets an Actor5e document from the chat message, this will always return the speaker
-    await ChatService.GetCurrentSceneTokenFromChatMessage(chatMessage) //Gets the token of the speaker of the chatMessage
+    await ChatMessageService.GetItemFromChatMessage(chatMessage) //Gets a Item5e document from the chat message
+    await ChatMessageService.GetActorFromChatMessage(chatMessage) //Gets an Actor5e document from the chat message, this will always return the speaker
+    await ChatMessageService.GetCurrentSceneTokenFromChatMessage(chatMessage) //Gets the token of the speaker of the chatMessage
+```
+
+Ex Usage:
+```javascript
+Hooks.on("createChatMessage", async (chatMessage, message, data) => {
+    const myItem = await ChatMessageService.GetItemFromChatMessage(chatMessage);
+})
 ```
 
 ## EffectService:
@@ -75,6 +92,19 @@ writing code within foundry. I try to follow best practices here, however, there
     await EffectService.AddManyEffects(actor, effectDataArray) //Adds multiple effects, does not duplicate
     await EffectService.RemoveEffect(actor, effectName) //Removes an effect by name
     EffectService.HasEffect(actor, effectName) //boolean response.
+```
+Ex Usage:
+```javascript
+Hooks.on("createChatMessage", async (chatMessage, message, data) => {
+    const myEffect = {
+        //Effect data
+    }
+    const actor = await ChatMessageService.GetActorFromChatMessage(chatMessage);
+    await EffectService.AddEffectIfMissing(actor, myEffect);
+    
+    //With SocketLib instead, note, you'll have had to instantiate the socket class for your module first (see below)
+    PhoenixSocketLib['my-module-name'].executeAsGM(PhxConst.SOCKET_METHOD_NAMES.ADD_EFFECT, actor, myEffect);
+})
 ```
 
 ## TokenService:
@@ -91,63 +121,107 @@ writing code within foundry. I try to follow best practices here, however, there
 
 ```javascript
     ActorService.GetItemsFromActorByType(actor5e, itemType) //Gets an array of items from the actor by the item type
-    ActorService.GetItemFromActorByName(actor5e, itemName) //Gets a single item from the actor by name
+    ActorService.GetItemFromActorByName(actor5e, itemName) //Gets a single item from the actor by name, undefined if not found
 ```
+
+
+## Example
+A pseudo script from my flight module.
+```javascript
+Hooks.on("createChatMessage", async (chatMessage, message, data) => {
+    const item = await ChatMessageService.GetItemFromChatMessage(chatMessage);
+    
+    if(item.name !== "Take Flight") return;
+    
+    const actor = await ChatMessageService.GetActorFromChatMessage(chatMessage);
+    
+    const flightItem = ActorService.GetItemFromActorByName(actor, "Take Flight");
+    if(!flightItem) return;
+
+    const initiatingActorToken = await ChatMessageService.GetCurrentSceneTokenFromChatMessage(chatMessage);
+    const controlledToken = canvas.tokens.controlled[0];
+    
+    if(initiatingActorToken.actorId !== controlledToken.document.actorid) return;
+    
+    //Non Socket
+    await TokenService.ElevateToken(initiatingActorToken, 5);
+    
+    //Socket
+    await PhoenixSocketLib[MODULE_NAME].executeAsGM(PhxConst.SOCKET_METHOD_NAMES.ELEVATE_TOKEN, initiatingActorToken, 5);
+    
+    
+})
+```
+
+
 
 ## SocketService:
 
 SocketService is a class that checks if socketlib is installed and creates a self-contained socketlib instance, injecting common library handlers
-for the module you pass in (See Constants.SOCKET_METHOD_NAMES).  It wraps all the socketlib methods available in the socketLib module EXCEPT the system methods.
+for the module you pass in (See PhxConst.SOCKET_METHOD_NAMES).  It wraps all the socketlib methods available in the socketLib module EXCEPT the system methods.
 It then registers itself with a global variable automatically. This is done to generate an easily accessible, unique singleton of your module's socketLib instance.
 
 For reference, see:https://github.com/manuelVo/foundryvtt-socketlib/tree/develop
 
+>PhoenixSocketLib is a global object E.G. window.PhoenixSocketLib
+
 ### DOES NOT USE
 ```javascript
-    socketLib.registerSystem
+    socketlib.registerSystem
+```
+
+
+### To begin, Create a new Socket Service:
+```javascript
+Hooks.once('ready', () => {
+    new SocketService('my-module-name-from-module-dot-json');
+});
 ```
 
 ### Global Variable Access:
 ```javascript
     ///Access base class
-    window.PhoenixSocketLib.myModuleName;
+    PhoenixSocketLib['my-module-name'];
 ```
 
 ### Public Variables:
 
 ```javascript
-    window.PhoenixSocketLib.HasSocketLib //Returns a bool
+    PhoenixSocketLib.HasSocketLib //Returns a bool
 
-    window.PhoenixSocketLib.SocketHandler //Returns the module's socketLib instance
+    PhoenixSocketLib.SocketHandler //Returns the module's socketLib instance
 ```
 
 
 ### Constants.SOCKET_METHOD_NAMES:
 ```javascript
-    Constants.SOCKET_METHOD_NAMES.ADD_EFFECT
-    Constants.SOCKET_METHOD_NAMES.ADD_MANY_EFFECTS
-    Constants.SOCKET_METHOD_NAMES.REMOVE_EFFECT
-    Constants.SOCKET_METHOD_NAMES.ELEVATE_TOKEN
-    Constants.SOCKET_METHOD_NAMES.ELEVATE_TOKEN_RESET
-    Constants.SOCKET_METHOD_NAMES.SCALE_TOKEN
-    Constants.SOCKET_METHOD_NAMES.SCALE_TOKEN_RESET
-    Constants.SOCKET_METHOD_NAMES.SET_ACTOR_FLAG
+    PhxConst.SOCKET_METHOD_NAMES.ADD_EFFECT
+    PhxConst.SOCKET_METHOD_NAMES.ADD_MANY_EFFECTS
+    PhxConst.SOCKET_METHOD_NAMES.REMOVE_EFFECT
+    PhxConst.SOCKET_METHOD_NAMES.ELEVATE_TOKEN
+    PhxConst.SOCKET_METHOD_NAMES.ELEVATE_TOKEN_RESET
+    PhxConst.SOCKET_METHOD_NAMES.SCALE_TOKEN
+    PhxConst.SOCKET_METHOD_NAMES.SCALE_TOKEN_RESET
+    PhxConst.SOCKET_METHOD_NAMES.SET_ACTOR_FLAG
 ```
 
 
-### Create a new Socket Service:
-```javascript
-    new SocketService(ModuleName); //Foundry Name of your module. Set in module.json. REQUIRED
-```
 
 ### Call Common Socket Methods:
 >See socketLib readme for more info: https://github.com/manuelVo/foundryvtt-socketlib/tree/develop
 ```javascript
-    await window.PhoenixSocketLib.myModuleName.executeAsGM(Constants.SOCKET_METHOD_NAMES.ADD_EFFECT, actor5e, myEffectData);
+    await PhoenixSocketLib['my-module-name'].executeAsGM(PhxConst.SOCKET_METHOD_NAMES.ADD_EFFECT, actor5e, myEffectData);
 ```
 
-### Register a new method
+### Register a new method and then execute it
 ```javascript
-    window.PhoenixSocketLib.myModuleName.register(myMethodNameAsString, myMethod);
+
+const logMe = function(myLog) {
+    console.log(myLog);
+}
+
+PhoenixSocketLib['my-module-name'].register('testLogger', logMe);
+
+await PhoenixSocketLib['my-module-name'].executeAsGM('testLogger', 'log message');
 ```
 

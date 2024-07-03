@@ -2,27 +2,23 @@ import compendiumMapper from "../objects/compendiumMapper.js";
 
 
 const CompendiumService = {
-    AddToCompendium: async (moduleName, compendiumName, documentArray, compendiumType) => {
-        const packName = `${moduleName}.${compendiumName}`;
-        const compendium = game.packs.find(p => p.metadata.id === packName);
-        if (!compendium) {
-            throw new Error(`Compendium ${moduleName}.${compendiumName} not found`);
-        }
-
-        await addManyToCompendium(compendium, documentArray, compendiumType);        
+    AddToCompendium: async (moduleName, compendiumName, document, compendiumType) => {
+        const compendium = CompendiumService.GetCompendium(moduleName, compendiumName);
+        
+        compendium.configure({locked: false});
+        
+        await CompendiumService.CreateOrUpdateCompendiumDocument(document, compendium, compendiumType);
+        
+        compendium.configure({locked: true});
     },
     
-    AddManyToCompendium: async () => {
+    AddManyToCompendium: async (moduleName, compendiumName, documentArray, compendiumType) => {
+        const compendium = CompendiumService.GetCompendium(moduleName, compendiumName);
+        
         compendium.configure({locked: false});
-        const handler = compendiumMapper[compendiumType];
 
-        for (const document of documentCollection) {
-            const existingDocument = compendium.index.find((i) => i.name === document.name);
-            if (!existingDocument) {
-                let addedItem;
-                addedItem = await handler.create(document, {pack: compendium.metadata.id});
-                console.log(`${compendiumType} '${addedItem.name}' added to compendium ${compendium.metadata.name}`);
-            }
+        for (const document of documentArray) {
+            await CompendiumService.CreateOrUpdateCompendiumDocument(document, compendium, compendiumType);            
         }
 
         compendium.configure({locked: true});
@@ -70,6 +66,27 @@ const CompendiumService = {
             console.log(`Item "${itemName}" not found in any DND5e compendium packs.`);
             return null;
         }
+    },
+    
+    GetCompendium: (moduleName, compendiumName) => {
+        const packName = `${moduleName}.${compendiumName}`;
+        const compendium = game.packs.find(p => p.metadata.id === packName);
+        if (!compendium) {
+            throw new Error(`Compendium ${moduleName}.${compendiumName} not found`);
+        }
+        return compendium;
+    },
+    
+    CreateOrUpdateCompendiumDocument: async (document, compendium, compendiumType) => {
+        const existingDocument = compendium.index.find((i) => i.name === document.name);
+        if (!existingDocument) {
+            const handler = compendiumMapper[compendiumType];
+            let addedItem;
+            addedItem = await handler.create(document, {pack: compendium.metadata.id});
+            console.log(`${compendiumType} '${addedItem.name}' added to compendium ${compendium.metadata.name}`);
+            return;
+        }
+        existingDocument.update(document);
     }
 }
 

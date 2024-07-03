@@ -1,4 +1,4 @@
-﻿import {SOCKET_METHOD_NAMES} from "../constants/constants.js";
+﻿import {SOCKET_METHOD_NAMES} from "../constants/phxConst.js";
 import EffectService from "./effectService.js";
 import ActorService from "./actorService.js";
 import TokenService from "./tokenService.js";
@@ -20,7 +20,7 @@ export default class SocketService {
     }
     
     #_registerCommonSockets() {
-        this.SocketHandler = socketLib.registerModule(this.#_module);
+        this.SocketHandler = socketlib.registerModule(this.#_module);
 
         this.#_registerCommonSocketMethods();        
         
@@ -47,7 +47,7 @@ export default class SocketService {
     }
     
     #_isSocketLibInstalled() {
-        if(!socketLib) {
+        if(!socketlib) {
             console.error("SocketLib is not installed! Cannot Continue!");
             return false;
         }
