@@ -20,17 +20,17 @@ const ChatMessageService = {
     },
 
     GetCurrentSceneTokenFromChatMessage: (chatMessage) => {
-        const tokenId = chatMessage?.speaker?.token;
-        if(!tokenId) {
+        const speakerActorId = chatMessage?.speaker?.actor;
+        if(!speakerActorId) {
             console.warn("There is no token for the initiator of this chat message!");
             return;
         }
-        const searchResult = game.scenes.active.collections.tokens.search(tokenId);
-        if(searchResult.length === 0) {
+        const searchResult = game.scenes.active.collections.tokens.find(x => x.actorId === speakerActorId)
+        if(!searchResult) {
             console.warn("There is no token for the initiator of this chat message in the active scene!");
             return;
         }
-        return searchResult[0];
+        return searchResult;
     },
 
     GetTargetsFromChatMessage: async (chatMessage) => {
