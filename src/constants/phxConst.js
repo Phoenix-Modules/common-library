@@ -38,5 +38,6 @@ export const SOCKET_METHOD_NAMES = {
     SCALE_TOKEN: "scaleToken",
     SCALE_TOKEN_RESET: "resetTokenScale",
     ELEVATE_TOKEN: "elevateToken",
-    ELEVATE_TOKEN_RESET: "resetTokenElevation"
+    ELEVATE_TOKEN_RESET: "resetTokenElevation",
+    ROTATE_TOWARDS_TARGET: "rotateTowardsTarget"
 }

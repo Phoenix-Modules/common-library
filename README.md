@@ -72,15 +72,16 @@ writing code within foundry. I try to follow best practices here, however, there
 ## ChatService:
 
 ```javascript
-    await ChatMessageService.GetItemFromChatMessage(chatMessage) //Gets a Item5e document from the chat message
-    await ChatMessageService.GetActorFromChatMessage(chatMessage) //Gets an Actor5e document from the chat message, this will always return the speaker
-    await ChatMessageService.GetCurrentSceneTokenFromChatMessage(chatMessage) //Gets the token of the speaker of the chatMessage
+    await ChatMessageService.GetChatMessageSpeakerItem(chatMessage) //Gets a Item5e document from the chat message
+await ChatMessageService.GetChatMessageSpeakerActor(chatMessage) //Gets an Actor5e document from the chat message, this will always return the speaker
+await ChatMessageService.GetChatMessageSpeakerToken(chatMessage) //Gets the token of the speaker of the chatMessage
 ```
 
 Ex Usage:
+
 ```javascript
 Hooks.on("createChatMessage", async (chatMessage, message, data) => {
-    const myItem = await ChatMessageService.GetItemFromChatMessage(chatMessage);
+    const myItem = await ChatMessageService.GetChatMessageSpeakerItem(chatMessage);
 })
 ```
 
@@ -95,14 +96,15 @@ Hooks.on("createChatMessage", async (chatMessage, message, data) => {
     EffectService.HasEffect(actor, effectName) //boolean response.
 ```
 Ex Usage:
+
 ```javascript
 Hooks.on("createChatMessage", async (chatMessage, message, data) => {
     const myEffect = {
         //Effect data
     }
-    const actor = await ChatMessageService.GetActorFromChatMessage(chatMessage);
+    const actor = await ChatMessageService.GetChatMessageSpeakerActor(chatMessage);
     await EffectService.AddEffectIfMissing(actor, myEffect);
-    
+
     //With SocketLib instead, note, you'll have had to instantiate the socket class for your module first (see below)
     PhoenixSocketLib['my-module-name'].executeAsGM(PhxConst.SOCKET_METHOD_NAMES.ADD_EFFECT, actor, myEffect);
 })
@@ -128,29 +130,30 @@ Hooks.on("createChatMessage", async (chatMessage, message, data) => {
 
 ## Example
 A pseudo script from my flight module.
+
 ```javascript
 Hooks.on("createChatMessage", async (chatMessage, message, data) => {
-    const item = await ChatMessageService.GetItemFromChatMessage(chatMessage);
-    
-    if(item.name !== "Take Flight") return;
-    
-    const actor = await ChatMessageService.GetActorFromChatMessage(chatMessage);
-    
-    const flightItem = ActorService.GetItemFromActorByName(actor, "Take Flight");
-    if(!flightItem) return;
+    const item = await ChatMessageService.GetChatMessageSpeakerItem(chatMessage);
 
-    const initiatingActorToken = await ChatMessageService.GetCurrentSceneTokenFromChatMessage(chatMessage);
+    if (item.name !== "Take Flight") return;
+
+    const actor = await ChatMessageService.GetChatMessageSpeakerActor(chatMessage);
+
+    const flightItem = ActorService.GetItemFromActorByName(actor, "Take Flight");
+    if (!flightItem) return;
+
+    const initiatingActorToken = await ChatMessageService.GetChatMessageSpeakerToken(chatMessage);
     const controlledToken = canvas.tokens.controlled[0];
-    
-    if(initiatingActorToken.actorId !== controlledToken.document.actorid) return;
-    
+
+    if (initiatingActorToken.actorId !== controlledToken.document.actorid) return;
+
     //Non Socket
     await TokenService.ElevateToken(initiatingActorToken, 5);
-    
+
     //Socket
     await PhoenixSocketLib[MODULE_NAME].executeAsGM(PhxConst.SOCKET_METHOD_NAMES.ELEVATE_TOKEN, initiatingActorToken, 5);
-    
-    
+
+
 })
 ```
 

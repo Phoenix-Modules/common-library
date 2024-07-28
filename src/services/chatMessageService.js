@@ -1,7 +1,7 @@
 
 const ChatMessageService = {
 
-    GetItemFromChatMessage: async (chatMessage) => {
+    GetChatMessageSpeakerItem: async (chatMessage) => {
         const itemId = chatMessage?.flags?.dnd5e?.use?.itemUuid;
         if(!itemId) {
             console.warn("cannot get item from chat message!");
@@ -10,7 +10,7 @@ const ChatMessageService = {
         return await fromUuid(itemId);
     },
 
-    GetActorFromChatMessage: async (chatMessage) => {
+    GetChatMessageSpeakerActor: async (chatMessage) => {
         const actorId = chatMessage?.speaker?.actor;
         if(!actorId) {
             console.warn("Cannot get actor from chat message!");
@@ -19,7 +19,7 @@ const ChatMessageService = {
         return await fromUuid(`Actor.${actorId}`);
     },
 
-    GetCurrentSceneTokenFromChatMessage: (chatMessage) => {
+    GetChatMessageSpeakerToken: (chatMessage) => {
         const speakerActorId = chatMessage?.speaker?.actor;
         if(!speakerActorId) {
             console.warn("There is no token for the initiator of this chat message!");
@@ -33,9 +33,11 @@ const ChatMessageService = {
         return searchResult;
     },
 
-    GetTargetsFromChatMessage: async (chatMessage) => {
-        return chatMessage?.user?.targets;
-    }
+    GetChatMessageSpeakerTargets: (chatMessage) => {
+        // const array = [];
+        // chatMessage.user.targets.forEach(v => array.push(v));
+        return Array.from(chatMessage.user.targets);
+    },
 }
 
 export default ChatMessageService;

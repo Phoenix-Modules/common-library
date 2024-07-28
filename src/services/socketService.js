@@ -28,7 +28,7 @@ export default class SocketService {
     }
     
     #_registerCommonSocketMethods() {        
-        this.SocketHandler.register(SOCKET_METHOD_NAMES.ADD_EFFECT, EffectService.AddEffectIfMissing);
+        this.SocketHandler.register(SOCKET_METHOD_NAMES.ADD_EFFECT, EffectService.AddEffect);
         this.SocketHandler.register(SOCKET_METHOD_NAMES.ADD_MANY_EFFECTS, EffectService.AddManyEffects);
         this.SocketHandler.register(SOCKET_METHOD_NAMES.REMOVE_EFFECT, EffectService.RemoveEffect);
         this.SocketHandler.register(SOCKET_METHOD_NAMES.SET_ACTOR_FLAG, ActorService.SetActorFlag);
@@ -36,6 +36,7 @@ export default class SocketService {
         this.SocketHandler.register(SOCKET_METHOD_NAMES.ELEVATE_TOKEN_RESET, TokenService.ResetTokenElevation);
         this.SocketHandler.register(SOCKET_METHOD_NAMES.SCALE_TOKEN, TokenService.ScaleToken);
         this.SocketHandler.register(SOCKET_METHOD_NAMES.SCALE_TOKEN_RESET, TokenService.ResetTokenScale);
+        this.SocketHandler.register(SOCKET_METHOD_NAMES.ROTATE_TOWARDS_TARGET, TokenService.RotateTowardsTarget);
     }
     
     #_registerSocketService() {

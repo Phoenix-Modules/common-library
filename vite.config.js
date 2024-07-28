@@ -5,6 +5,7 @@ export default defineConfig({
     build: {
         minify: false,
         rollupOptions: {
+            treeshake: false,
             plugins: [nodeResolve({ exportConditions: ['node'] })],
             input: {
                 module: "src/index.js",
